@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Feb 23 14:31:24 2017
+S4 - 2019-02
 Strong Connectivity
-@author: Nathalie
 """
 
 from algopy import graph, stack
@@ -98,14 +97,22 @@ def Kosaraju(G):
 def __Tarjan(G, x, pref, cpt, cfc, nocfc, vertexStack):
     cpt += 1
     pref[x] = cpt
-    
-    for y in range(G.adjlists[x]):
+    return_x = pref[x]
+    vertexStack.push(x)
+    for y in G.adjlists[x]:
         if pref[y] == 0:
-            (return_y, cpt, nocfc) = __tarjan(G, y, cpt, cfc, nocfc, vertexStack)
-        
+            (return_y, cpt, nocfc) = __Tarjan(G, y, pref, cpt, cfc, nocfc, vertexStack)
+            return_x = min(return_x, return_y)
         else:
-            pass
-    
+            return_x = min(return_x, pref[y])
+    if return_x == pref[x]:
+        nocfc += 1           
+        y = -4
+        while y != x:
+            y = vertexStack.pop()
+            cfc[y] = nocfc
+            pref[y] = 4 * G.order
+            
     return (return_x, cpt, nocfc)
 
 
