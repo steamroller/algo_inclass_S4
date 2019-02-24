@@ -79,7 +79,35 @@ def component_list(G):
     return L
 
 
+#------------------------------------------------------------------------------
+# test tree
+# connected + without cycles
 
+def __isTree(G, s, p):
+    '''
+    vertex are marked with parents in p
+    returns (nb, tree)
+    nb: number of met vertices
+    tree: boolean == without cycle
+    '''
+    nb = 1
+    for adj in G.adjlists[s]:
+        if p[adj] == None:
+            p[adj] = s
+            (n, tree) = __isTree(G, adj, p)
+            nb += n
+            if not tree:
+                return (nb, False)
+        else:
+            if adj != p[s]:
+                return (nb, False)
+    return (nb, True)
+
+def isTree(G):
+    p = [None] * G.order
+    p[0] = -1
+    (nb, acyclic) = __isTree(G, 0, p)
+    return acyclic and nb == G.order
 
 
 
