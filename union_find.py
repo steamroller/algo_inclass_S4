@@ -40,8 +40,8 @@ def union(x, y, p):
 #@timing
 def buildUnionFind(n, L):
     '''
-    n: integer > 0
-    L: list of pairs (a, b) with a and b in [0, n[
+    n: graph order = integer > 0
+    L: edge list = list of pairs (a, b) with a and b in [0, n[
     '''
     p = [-1]*n
     for (x, y) in L:
@@ -78,8 +78,8 @@ def union2(x, y, p):
 #@timing
 def buildUnionFind2(n, L):
     '''
-    n: integer > 0
-    L: list of pairs (a, b) with a and b in [0, n[
+    n: graph order = integer > 0
+    L: edge list = list of pairs (a, b) with a and b in [0, n[
     '''
     p = [-1]*n
     for (x, y) in L:
@@ -90,7 +90,9 @@ def buildUnionFind2(n, L):
 
 def makeMeConnected(n, L):
     """
-    return the list of edges to add
+    n: graph order = integer > 0
+    L: edge list = list of pairs (a, b) with a and b in [0, n[
+    return the list of edges to add to make the graph connected
     """
     p = buildUnionFind2(n, L)
     x = 0
@@ -116,8 +118,6 @@ def makeComponentsUF(L, n):
     for s in range(n):
         cc[s] = cc[find2(s, p)]
     return (cc, k)
-    
-# TODO: find a better version     
     
     
     
