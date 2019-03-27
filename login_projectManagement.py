@@ -47,17 +47,18 @@ def BellmanForProject(G, src, din):
     """
     dist = [-inf] * G.order
     dist[src] = 0
-    #FIXME
-    
-    while  #FIXME:
-        x = #FIXME
+    q = queue.Queue()
+    q.enqueue(src)
+    while not q.isempty() :
+        x = q.dequeue()
         for y in G.adjlists[x]:
             if dist[x] + G.costs[(x, y)] > dist[y]:
                 dist[y] = dist[x] + G.costs[(x, y)]
-            
-            #FIXME
-
+            din[y] -= 1
+            if din[y] == 0:
+                q.enqueue(y)
     return dist
+
 
 def project(L):
     """
