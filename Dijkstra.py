@@ -85,5 +85,25 @@ def Dijkstra_1(G, src, dst = None):
     return (dist, p)
 
 
-    
+#------------------------------------------------------------------------------
+# Optimization: with a heap (not in tuto, see next exercise)
+
+from algopy import heap_spe as heap
+
+def Dijkstra(G, src, dst = None):
+    dist = [inf] * G.order
+    dist[src] = 0
+    p = [-1] * G.order    
+    H = heap.Heap(G.order)
+    H.push(src, 0)
+    while not H.is_empty():
+        (_, x) = H.pop()  # cannot be at the end of the loop...
+        if x == dst:
+            return (dist, p)
+        for y in G.adjlists[x]:
+            if dist[x] + G.costs[(x, y)] < dist[y]:
+                dist[y] = dist[x] + G.costs[(x, y)]
+                p[y] = x
+                H.update(y, dist[y])
+    return (dist, p)    
        
