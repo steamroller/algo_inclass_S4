@@ -35,13 +35,44 @@ def buildFromList(L):
         din, dout: vectors of in- and out- degrees in G
     """
     
-    #FIXME
+    n = len(L)
+        
+    G = graph.Graph(n+2, directed=True)
+    G.costs = {}
+    G_1 = graph.Graph(n+2, directed=True)
+    G_1.costs = {}
     
+    dout = [0] * (n+2)
+    din = [0] * (n+2)
+
+    for y in range(n):
+        din[y] = len(L[y][1])       # L[y][1]: y's predecessors
+        for x in L[y][1]:
+            G.addedge(x, y)
+            G.costs[(x, y)] = L[x][0]
+            dout[x] += 1
+            G_1.addedge(y, x)
+            G_1.costs[(y, x)] = L[x][0]
+  
+    for x in range(n):
+        if din[x] == 0: 
+            G.addedge(n, x)     # add edges from the first task n to sources
+            G_1.addedge(x, n)
+            G.costs[(n, x)] = G_1.costs[(x, n)] = 0
+            dout[n] += 1
+            din[x] = 1
+        if dout[x] == 0:          
+            G.addedge(x, n+1)       # add edges from sinks to the last task (n+1)
+            G_1.addedge(n+1, x)
+            G.costs[(x, n+1)] = G_1.costs[(n+1, x)] = L[x][0]
+            dout[x] = 1
+            din[n+1] += 1
+
     return (G, G_1, din, dout)
 
 def BellmanForProject(G, src, din):
     """
-    return dist: the longuest paths from src to all vertices
+    return dist: the longest paths from src to all vertices
     all vertices are reachable from src
     din: the in-degree vector
     """
@@ -71,9 +102,14 @@ def project(L):
     - the minimum expected project duration
     """
     
-    #FIXME
-    
-    return None
+    n = len(L)
+    (G, G_1, din, dout) = buildFromList(L)
+    earliest = BellmanForProject(G, n, din)
+    finish = earliest[n+1]
+    late = BellmanForProject(G_1, n+1, dout)
+    res = [(earliest[x], finish - late[x] - earliest[x]) for x in range(n)]
+    return (res, finish)
+
 
 ## example:
 # project(myHouse)
