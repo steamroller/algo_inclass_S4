@@ -18,9 +18,26 @@ def astar(G, src, dst, heur):
         prints the list of processed vertices
         returns, as usual, dist and p
     """
-
-    #FIXME
-    pass
+    dist = [inf] * G.order
+    p = [-1] * G.order
+    closed = [False] * G.order
+    dist[src] = 0
+    openHeap = heap.Heap(G.order)
+    x = src
+    processed = []
+    while x != dst:
+        processed.append(x)
+        closed[x] = True
+        for y in G.adjlists[x]:
+            if not closed[y] and dist[x] + G.costs[(x, y)] < dist[y]:
+                dist[y] = dist[x] + G.costs[(x, y)]
+                p[y] = x
+                openHeap.update(y, dist[y] + heur[y])
+        if openHeap.is_empty():
+            raise Exception("dst not reachable")
+        (_, x) = openHeap.pop()
+    print("Processed vertices:", processed)
+    return (dist, p)
     
     print("Processed vertices:", processed)
     return (dist, p)
